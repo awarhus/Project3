@@ -33,34 +33,31 @@ shinyServer(function(input, output, session) {
             g
         }
     })
-    output$lollipop <- renderPlot({
+    output$boxplot <- renderPlot({
         vars <- input$var
         type<-input$typeOfSchool
         if (vars == "Agency Type"){
             filt<-str_detect(disciplines$AGENCY_TYPE, type)
             disciplines1<-filter(disciplines, filt)
             counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
-            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE)) +
-                geom_point(stat="count") + 
-                geom_segment( aes(x=BEHAVIOR_TYPE, xend=BEHAVIOR_TYPE, y=0,yend=counts))
+            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE, y=counts)) +
+                geom_boxplot()
         }
         else if (vars == "Grade"){
             type<-input$gradeGroup
             filt<-str_detect(disciplines$GRADE_GROUP,type)
             disciplines1<-filter(disciplines, filt)
             counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
-            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE)) +
-                geom_point(stat="count") + 
-                geom_segment( aes(x=BEHAVIOR_TYPE, xend=BEHAVIOR_TYPE, y=0,yend=counts))
+            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE),y=counts) +
+                geom_boxplot()
         }
         else if (vars =="District"){
             type<-input$district
             filt<-str_detect(disciplines$DISTRICT_NAME,type)
             disciplines1<-filter(disciplines, filt)
             counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
-            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE)) +
-                geom_point(stat="count") + 
-                geom_segment( aes(x=BEHAVIOR_TYPE, xend=BEHAVIOR_TYPE, y=0,yend=counts))
+            ggplot(disciplines1, aes(x=BEHAVIOR_TYPE, y=counts)) +
+               geom_boxplot()
         }
     })
     output$fivenumber <- renderDataTable({
@@ -70,7 +67,7 @@ shinyServer(function(input, output, session) {
         disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
         fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
                                        DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
-            group_by(BEHAVIOR_TYPE) %>% na.omit() 
+            group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(median(counts))
         fiver
     })
     output$mean <- renderDataTable({

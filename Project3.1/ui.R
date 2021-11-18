@@ -35,7 +35,7 @@ shinyUI(navbarPage(
                 radioButtons(
                     inputId = "plotType",
                     label = "Plot Type",
-                    choices= c("Barchart", "Lollipop"),
+                    choices= c("Barchart", "Boxplot"),
                     selected = "Barchart",
                     inline = TRUE
                 ),
@@ -88,8 +88,8 @@ shinyUI(navbarPage(
                     plotOutput("barchart")
                 ),
                 conditionalPanel(
-                    condition = "input.plotType == 'Lollipop'",
-                    plotOutput("lollipop")
+                    condition = "input.plotType == 'Boxplot'",
+                    plotOutput("boxplot")
                 ),
                 conditionalPanel(
                     condition = "input.summ == 'Five Number Summary'",
