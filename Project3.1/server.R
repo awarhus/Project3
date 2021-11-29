@@ -99,6 +99,7 @@ shinyServer(function(input, output, session) {
         }
     )
     output$classTree<-renderUI({
+        set.seed(234)
         cv<-input$cv
         cp<-input$cp
         vars<-unlist(input$treeVars)
@@ -116,6 +117,7 @@ shinyServer(function(input, output, session) {
     confusionMatrix(data=test$BEHAVIOUR_TYPE,reference=predict(treeFit,newdata=test))
     })
     output$randomForest<-renderUI({
+        set.seed(1231)
         vars<-unlist(input$rfVars)
         mtry<-input$mtry
         props <- input$proportions
@@ -131,6 +133,22 @@ shinyServer(function(input, output, session) {
                        tuneGrid = expand.grid(mtry=mtry))
                        confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
         confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
+    })
+    output$logistic<-renderUI({
+        set.seed(8758)
+        props <- input$proportions
+        cv<-input$cv
+        vars<-unlist(input$regVars)
+        split<- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
+                                          p = props, list = FALSE)
+        train <- disciplines[-split, ]
+        test <- disciplines[split, ]
+        train0<-train(BEHAVIOR_TYPE~.,
+                      data=train[,c("BEHAVIOR_TYPE",vars)],
+                      method="glm",
+                      family="binomial",
+                      preProcess=c("center","scale"),
+                      trControl=trainControl(method="cv",number=cv))
     })
     
     
