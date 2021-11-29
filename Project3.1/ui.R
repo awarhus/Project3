@@ -19,8 +19,8 @@ shinyUI(navbarPage(
                 h3("App Description"),
                 img(
                     src = imageName, 
-                    height = '406px', 
-                    width = '640px'
+                    height = '306px', 
+                    width = '540px'
                 ),
                 "This app explores behavior incident data from",
                 "schools in Wisconsin during the 2019-2020 school year.", 
@@ -57,8 +57,16 @@ shinyUI(navbarPage(
                     selected = "Barchart",
                     inline = TRUE
                 ),
+                h3("Choose the type of summary"),
+                radioButtons(
+                    inputId = "summ",
+                    label = "Summary Type",
+                    choices= c("Median", "Just the Mean"),
+                    selected = "Median",
+                    inline = TRUE
+                ),
                 radioButtons( inputId = "var", 
-                              label = "Which variable would you like to graph?",
+                              label = "Which variable would you like to explore?",
                               choices = c("Agency Type","Grade", "District"),
                               selected = "Agency Type"
                 ),
@@ -86,19 +94,6 @@ shinyUI(navbarPage(
                                 choices = unique(disciplines$DISTRICT_NAME),
                                 selected = "Ashwaubenon")
                 ),
-                h3("Choose the type of summary"),
-                radioButtons(
-                    inputId = "summ",
-                    label = "Summary Type",
-                    choices= c("Five Number Summary", "Just the Mean"),
-                    selected = "Five Number Summary",
-                    inline = TRUE
-                ),
-                radioButtons(inputId = "schoolSumm",
-                             label = strong("Choose the School Type"),
-                             choices = c("All","None Assigned ","Public School","School District",
-                                         "Non District Charter Schools","Public Schools-Multidistrict Charters"),
-                             selected = "All")
             ),
             mainPanel(
                 conditionalPanel(
@@ -110,7 +105,7 @@ shinyUI(navbarPage(
                     plotOutput("boxplot")
                 ),
                 conditionalPanel(
-                    condition = "input.summ == 'Five Number Summary'",
+                    condition = "input.summ == 'Median'",
                     dataTableOutput("fivenumber")
                 ),
                 conditionalPanel(

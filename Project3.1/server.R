@@ -61,25 +61,71 @@ shinyServer(function(input, output, session) {
         }
     })
     output$fivenumber <- renderDataTable({
-        type<-input$schoolSumm
-        filt<-str_detect(disciplines$AGENCY_TYPE, type)
-        disciplines1<-filter(disciplines, filt)
-        disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
-        fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
-                                       DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
-            group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(median(counts))
-        fiver
+        vars <- input$var
+        if(vars == "Agency Type"){
+            type<-input$typeOfSchool
+            filt<-str_detect(disciplines$AGENCY_TYPE, type)
+            disciplines1<-filter(disciplines, filt)
+            disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+            fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                           DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(median(counts))
+            fiver
+        }
+        else if (vars == "Grade"){
+            type<-input$gradeGroup
+            filt<-str_detect(disciplines$GRADE_GROUP,type)
+            disciplines1<-filter(disciplines, filt)
+            disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+            fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                           DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(median(counts))
+            fiver
+        }
+        else if (vars =="District"){
+            type<-input$district
+            filt<-str_detect(disciplines$DISTRICT_NAME,type)
+            disciplines1<-filter(disciplines, filt)
+            disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+            fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                           DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(median(counts))
+            fiver
+        }
     })
     output$mean <- renderDataTable({
-        type<-input$schoolSumm
-        filt<-str_detect(disciplines$AGENCY_TYPE, type)
-        disciplines1<-filter(disciplines, filt)
-        disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
-        fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
-                                       DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
-            group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(mean(counts))
-        fiver
-    })
+            vars <- input$var
+            if(vars == "Agency Type"){
+                type<-input$typeOfSchool
+                filt<-str_detect(disciplines$AGENCY_TYPE, type)
+                disciplines1<-filter(disciplines, filt)
+                disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+                fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                               DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                    group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(mean(counts))
+                fiver
+            }
+            else if (vars == "Grade"){
+                type<-input$gradeGroup
+                filt<-str_detect(disciplines$GRADE_GROUP,type)
+                disciplines1<-filter(disciplines, filt)
+                disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+                fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                               DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                    group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(mean(counts))
+                fiver
+            }
+            else if (vars =="District"){
+                type<-input$district
+                filt<-str_detect(disciplines$DISTRICT_NAME,type)
+                disciplines1<-filter(disciplines, filt)
+                disciplines1$counts<-as.numeric(disciplines1$INCIDENTS_COUNT)
+                fiver<-disciplines1 %>% select(AGENCY_TYPE,GRADE_GROUP, 
+                                               DISTRICT_NAME,BEHAVIOR_TYPE, counts) %>%
+                    group_by(BEHAVIOR_TYPE) %>% na.omit() %>% summarize(mean(counts))
+                fiver
+            }
+        })
     output$dataTab <- renderDataTable({
         school<-input$typeOfSchool
         grade<-input$gradeGroup
