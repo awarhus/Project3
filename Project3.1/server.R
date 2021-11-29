@@ -98,6 +98,23 @@ shinyServer(function(input, output, session) {
             write.csv(disciplines4,file = "disciplines.csv")
         }
     )
+    output$classTree<-renderUI({
+        cv<-input$cv
+        cp<-input$cp
+        vars<-unlist(input$treeVars)
+        props <- input$proportions
+        split <- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
+                                     p = props, list = FALSE)
+        train <- disciplines[-split, ]
+        test <- disciplines[split, ]
+        ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
+        treeFit <- train(BEHAVIOUR_TYPE ~ .,
+                         data = train[,c("BEHAVIOR_TYPE",vars)], 
+                     method = "rpart", trControl = ctrl, 
+                     preProcess = c("center","scale"),
+                     cp = cp)
+    confusionMatrix(data=test$BEHAVIOUR_TYPE,reference=predict(treeFit,newdata=test))
+    })
     
    
 })

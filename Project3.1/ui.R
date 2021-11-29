@@ -134,7 +134,7 @@ shinyUI(navbarPage(
         navbarMenu(
             title="Modeling",
             tabPanel(
-                title = "Modeling Info",
+                title = "Modeling Info", #Need to add mathJax
                 mainPanel(fluidPage(
                     h4("Logistic Regression"),
                     "Logistic regression uses predictor variables to model the log odds of",
@@ -166,11 +166,121 @@ shinyUI(navbarPage(
                     br(),
                     br()
                 ))
-            )
-        )
+            ), #closes modeling info tab
+            tabPanel(
+                title = "Model Fitting",
+                sidebarPanel(
+                    h3("Train-Test Split"), #Choose proportion of data for train/test split
+                    selectInput(
+                        inputId = "proportions",
+                        label = "Proportion of Data to use for testing set. The
+                        proportion of data used for the training set will be 
+                        1-the number you choose for the testing set.",
+                        choices = c(0.1,0.2,0.3,0.4,0.5),
+                        selected = 0.5),
+                    h3("Options for Models"),
+                    selectInput(
+                        inputId = "mtry", 
+                        label = "Select value for mtry:", 
+                        choices = 1:10,
+                        selected = 1),
+                    selectInput(
+                        inputId = "cv",
+                        label = "Number of folds for cross validation:",
+                        choices = c(5,10),
+                        selected = 5
+                    ),
+                    selectInput(
+                        inputId = "cp",
+                        label = "Choose the cp:",
+                        choices = c(0,0.001,0.002, 0.003,0.004, 0.005,0.006,0.007,0.008, 0.009, 0.01)
+                    ),
+                    h3("Logistic Regression Parameters"),
+                    selectInput(
+                        inputId = "regVars",
+                        label = "Variables to Include:",
+                        choices = c("SCHOOL_YEAR",
+                                    "AGENCY_TYPE",
+                                    "CESA",
+                                    "COUNTY",
+                                    "GRADE_GROUP",
+                                    "CHARTER_IND",
+                                    "DISTRICT_NAME",
+                                    "SCHOOL_NAME",
+                                    "INCIDENTS_COUNT"),
+                        selected = c("SCHOOL_YEAR",
+                                     "AGENCY_TYPE",
+                                     "CESA",
+                                     "COUNTY",
+                                     "GRADE_GROUP",
+                                     "CHARTER_IND",
+                                     "DISTRICT_NAME",
+                                     "SCHOOL_NAME",
+                                     "INCIDENTS_COUNT"),
+                        multiple = TRUE
+                    ),
+                    h3("Tree Parameters"),
+                    selectInput(
+                        inputId = "treeVars",
+                        label = "Variables to Include:",
+                        choices = c("SCHOOL_YEAR",
+                                    "AGENCY_TYPE",
+                                    "CESA",
+                                    "COUNTY",
+                                    "GRADE_GROUP",
+                                    "CHARTER_IND",
+                                    "DISTRICT_NAME",
+                                    "SCHOOL_NAME",
+                                    "INCIDENTS_COUNT"),
+                        selected = c("SCHOOL_YEAR",
+                                     "AGENCY_TYPE",
+                                     "CESA",
+                                     "COUNTY",
+                                     "GRADE_GROUP",
+                                     "CHARTER_IND",
+                                     "DISTRICT_NAME",
+                                     "SCHOOL_NAME",
+                                     "INCIDENTS_COUNT"),
+                        multiple = TRUE
+                    ),
+                    h3("Random Forest Parameters"),
+                    selectInput(
+                        inputId = "randForVars",
+                        label = "Variables to Include:",
+                        choices = c("SCHOOL_YEAR",
+                                    "AGENCY_TYPE",
+                                    "CESA",
+                                    "COUNTY",
+                                    "GRADE_GROUP",
+                                    "CHARTER_IND",
+                                    "DISTRICT_NAME",
+                                    "SCHOOL_NAME",
+                                    "INCIDENTS_COUNT"),
+                        selected = c("SCHOOL_YEAR",
+                                     "AGENCY_TYPE",
+                                     "CESA",
+                                     "COUNTY",
+                                     "GRADE_GROUP",
+                                     "CHARTER_IND",
+                                     "DISTRICT_NAME",
+                                     "SCHOOL_NAME",
+                                     "INCIDENTS_COUNT"),
+                        multiple = TRUE
+                    ),
+                        actionButton(
+                            inputId = "trainStart",
+                            label = "Fit Models!"
+                        )
+                        
+            ),
+            
+                    
+                   
+        ) # closes the navbarMenu for the modeling section
             
        
     ) #tabsetpanel 
-)) #shinyUI and navbar
+))
+)#shinyUI and navbar
 
 
