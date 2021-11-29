@@ -262,20 +262,56 @@ shinyUI(navbarPage(
                                      "INCIDENTS_COUNT"),
                         multiple = TRUE
                     ),
+                    mainPanel(
                         actionButton(
                             inputId = "trainStart",
                             label = "Fit Models!"
                         )
+                    )
                         
             ),
-            
-                    
-                   
+            tabPanel(
+                title = "Prediction",
+                sidebarPanel(
+                    radioButtons(
+                        inputId = "modelType",
+                        label = "Choose a Model",
+                        choiceNames = c(
+                            "Logistic Regression", 
+                            "Classification Tree", 
+                            "Random Forest"
+                        ),
+                        choiceValues = c("logReg", "tree", "randFor"),
+                        selected = "logReg"
+                    ),
+                    actionButton(
+                        inputId = "predStart",
+                        label = "Predict"
+                    ),
+                    conditionalPanel(
+                        condition = "input.modelType == 'logReg'",
+                        uiOutput("logRegPredInputs")
+                    ),
+                    conditionalPanel(
+                        condition = "input.modelType == 'tree'",
+                        uiOutput("treePredInputs")
+                    ),
+                    conditionalPanel(
+                        condition = "input.modelType == 'randFor'",
+                        uiOutput("randForPredInputs")
+                    )
+                ),
+                mainPanel(
+                    h3("Predicted Winner of a County with Your Inputs"),
+                    dataTableOutput("preds")
+                )
+            )
         ) # closes the navbarMenu for the modeling section
             
        
     ) #tabsetpanel 
 ))
-)#shinyUI and navbar
+)
+
 
 
