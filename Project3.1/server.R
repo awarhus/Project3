@@ -98,6 +98,8 @@ shinyServer(function(input, output, session) {
             write.csv(disciplines4,file = "disciplines.csv")
         }
     )
+    
+   
 })
 
 

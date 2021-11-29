@@ -130,7 +130,46 @@ shinyUI(navbarPage(
             mainPanel(
                 dataTableOutput("dataTab")
             )
-        ) #closes the data tab
+        ), #closes the data tab
+        navbarMenu(
+            title="Modeling",
+            tabPanel(
+                title = "Modeling Info",
+                mainPanel(fluidPage(
+                    h4("Logistic Regression"),
+                    "Logistic regression uses predictor variables to model the log odds of",
+                    "the response event occurring. It is easily interpretable, and highly",
+                    "efficient. However, logistic regression is limited by the number of",
+                    "observations (n) compared to the number of variables (m).",
+                    "If n<m, logistic regression shouldn't be used.",
+                    br(),
+                    br(),
+                    h4("Classification Trees"),
+                    "Classification trees recursively split data into different regions based",
+                    "on the most dominant class. They are highly interpretable.",
+                    "Splits are made to reduce training error, but they are based of off a",
+                    "greedy algorithm. Thismeans that the split is based on what is best now",
+                    "in terms of error reduction, but not necessarily what is best in the future.",
+                    "This means that the final model is not necessarily the best overall model.",
+                    br(),
+                    br(),
+                    h4("Random Forests"),
+                    "For classification, random forests use bootstrap samples and create",
+                    "trees on each. Majority rule is used for prediction.",
+                    "One benefit of random forests is that the bootstrap samples create",
+                    "subsets of the data, which prevents strong predictors from dominating",
+                    "the begining of all trees. This makes them more likely to be independent",
+                    "of each other. However, due to the complexity of the random forest process",
+                    "these models are good for prediction but do not have the interpretability",
+                    "of simpler models.",
+                    br(),
+                    br(),
+                    br()
+                ))
+            )
+        )
+            
+       
     ) #tabsetpanel 
 )) #shinyUI and navbar
 
