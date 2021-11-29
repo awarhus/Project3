@@ -2,7 +2,7 @@ library(shiny)
 library(dplyr)
 library(stringr)
 library(DT)
-
+library(caret)
 
 shinyServer(function(input, output, session) {
     output$barchart <- renderPlot({
@@ -115,6 +115,24 @@ shinyServer(function(input, output, session) {
                      cp = cp)
     confusionMatrix(data=test$BEHAVIOUR_TYPE,reference=predict(treeFit,newdata=test))
     })
+    output$randomForest<-renderUI({
+        vars<-unlist(input$rfVars)
+        mtry<-input$mtry
+        props <- input$proportions
+        split <- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
+                                     p = props, list = FALSE)
+        train <- disciplines[-split, ]
+        test <- disciplines[split, ]
+        cv<-input$cv
+        ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
+        rfFit <- train(BEHAVIOR_TYPE ~ ., data = train[,c("BEHAVIOR_TYPE",vars)], 
+                       method = "rf", trControl = ctrl, 
+                       preProcess = c("center","scale"),
+                       tuneGrid = expand.grid(mtry=mtry))
+                       confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
+        confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
+    })
+    
     
    
 })

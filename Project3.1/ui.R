@@ -4,7 +4,7 @@ library(tidyverse)
 
 setwd("C:\\Users\\awarhus_piusxi\\Desktop\\ST558\\Shiny Apps\\Project3")
 
-disciplines <- read_csv(".\\discipline_incidents_certified_2019-20.csv")
+disciplines <- read_csv(".\\disciplines_final_2.csv")
 shinyUI(navbarPage(
     
     
@@ -181,9 +181,10 @@ shinyUI(navbarPage(
                     h3("Options for Models"),
                     selectInput(
                         inputId = "mtry", 
-                        label = "Select value for mtry:", 
+                        label = "Select values for mtry:", 
                         choices = 1:10,
-                        selected = 1),
+                        selected = c(1,2),
+                        multiple = TRUE),
                     selectInput(
                         inputId = "cv",
                         label = "Number of folds for cross validation:",
@@ -199,8 +200,7 @@ shinyUI(navbarPage(
                     selectInput(
                         inputId = "regVars",
                         label = "Variables to Include:",
-                        choices = c("SCHOOL_YEAR",
-                                    "AGENCY_TYPE",
+                        choices = c("AGENCY_TYPE",
                                     "CESA",
                                     "COUNTY",
                                     "GRADE_GROUP",
@@ -208,8 +208,7 @@ shinyUI(navbarPage(
                                     "DISTRICT_NAME",
                                     "SCHOOL_NAME",
                                     "INCIDENTS_COUNT"),
-                        selected = c("SCHOOL_YEAR",
-                                     "AGENCY_TYPE",
+                        selected = c("AGENCY_TYPE",
                                      "CESA",
                                      "COUNTY",
                                      "GRADE_GROUP",
@@ -223,8 +222,7 @@ shinyUI(navbarPage(
                     selectInput(
                         inputId = "treeVars",
                         label = "Variables to Include:",
-                        choices = c("SCHOOL_YEAR",
-                                    "AGENCY_TYPE",
+                        choices = c("AGENCY_TYPE",
                                     "CESA",
                                     "COUNTY",
                                     "GRADE_GROUP",
@@ -232,8 +230,7 @@ shinyUI(navbarPage(
                                     "DISTRICT_NAME",
                                     "SCHOOL_NAME",
                                     "INCIDENTS_COUNT"),
-                        selected = c("SCHOOL_YEAR",
-                                     "AGENCY_TYPE",
+                        selected = c("AGENCY_TYPE",
                                      "CESA",
                                      "COUNTY",
                                      "GRADE_GROUP",
@@ -245,10 +242,9 @@ shinyUI(navbarPage(
                     ),
                     h3("Random Forest Parameters"),
                     selectInput(
-                        inputId = "randForVars",
+                        inputId = "rfVars",
                         label = "Variables to Include:",
-                        choices = c("SCHOOL_YEAR",
-                                    "AGENCY_TYPE",
+                        choices = c("AGENCY_TYPE",
                                     "CESA",
                                     "COUNTY",
                                     "GRADE_GROUP",
@@ -256,8 +252,7 @@ shinyUI(navbarPage(
                                     "DISTRICT_NAME",
                                     "SCHOOL_NAME",
                                     "INCIDENTS_COUNT"),
-                        selected = c("SCHOOL_YEAR",
-                                     "AGENCY_TYPE",
+                        selected = c("AGENCY_TYPE",
                                      "CESA",
                                      "COUNTY",
                                      "GRADE_GROUP",
