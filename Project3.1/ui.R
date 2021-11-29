@@ -5,6 +5,8 @@ library(tidyverse)
 setwd("C:\\Users\\awarhus_piusxi\\Desktop\\ST558\\Shiny Apps\\Project3")
 
 disciplines <- read_csv(".\\disciplines_final_2.csv")
+imageName <- paste0("DPIimage.png")
+
 shinyUI(navbarPage(
     
     
@@ -15,6 +17,11 @@ shinyUI(navbarPage(
             title="About",
             mainPanel(
                 h3("App Description"),
+                img(
+                    src = imageName, 
+                    height = '406px', 
+                    width = '640px'
+                ),
                 "This app explores behavior incident data from",
                 "schools in Wisconsin during the 2019-2020 school year.", 
                 "It can be broken down by type of school, location and type of incident.",
@@ -25,7 +32,18 @@ shinyUI(navbarPage(
                   "the Wisconsin DPI website"),
                 
                 h3("Tab Explanation"),
-                "I will describe the tabs here"
+                "Each tab provides a different way to explore the data.",
+                br(),
+                "The Data Exploration tab will do some general exploratory data analysis",
+                "and provide graphs and tables based on options from the user.",
+                br(),
+                "The Modeling tab contains 3 sub tabs. The first sub-tab, Modeling Info",
+                "describes the three different models that will be fit. The second sub-tab,",
+                "Model Fitting will allow the user to choose parameters with which to fit",
+                "models to the data and report the fit statistics. The third sub-tab,
+                Prediction. Based on the chosen parameters from the Model Fitting tab and",
+                "will report a prediction for the user from their chosen model."
+                
             )
         ),
         tabPanel(
