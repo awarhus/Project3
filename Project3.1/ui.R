@@ -5,7 +5,7 @@ library(tidyverse)
 setwd("C:\\Users\\awarhus_piusxi\\Desktop\\ST558\\Shiny Apps\\Project3")
 
 disciplines <- read_csv(".\\disciplines_final_2.csv")
-imageName <- paste0("DPIimage.png")
+imageName <- paste0("DPIimage.PNG")
 
 shinyUI(navbarPage(
     
@@ -183,6 +183,8 @@ shinyUI(navbarPage(
                     br()
                 ))
             ), #closes modeling info tab
+            
+            #Model Fitting Tab
             tabPanel(
                 title = "Model Fitting",
                 sidebarPanel(
@@ -195,24 +197,24 @@ shinyUI(navbarPage(
                         choices = c(0.1,0.2,0.3,0.4,0.5),
                         selected = 0.5),
                     h3("Options for Models"),
-                    selectInput(
+                    selectInput( #choose mtry
                         inputId = "mtry", 
                         label = "Select values for mtry:", 
                         choices = 1:10,
                         selected = c(1,2),
                         multiple = TRUE),
-                    selectInput(
+                    selectInput( #Choose # of folds for CV
                         inputId = "cv",
                         label = "Number of folds for cross validation:",
                         choices = c(5,10),
                         selected = 5
                     ),
-                    selectInput(
+                    selectInput( #choose cp
                         inputId = "cp",
                         label = "Choose the cp:",
                         choices = c(0,0.001,0.002, 0.003,0.004, 0.005,0.006,0.007,0.008, 0.009, 0.01)
                     ),
-                    h3("Logistic Regression Parameters"),
+                    h3("Logistic Regression Parameters"),#choose parameters for logistic regression
                     selectInput(
                         inputId = "regVars",
                         label = "Variables to Include:",
@@ -236,7 +238,7 @@ shinyUI(navbarPage(
                                      "INCIDENTS_COUNT"),
                         multiple = TRUE
                     ),
-                    h3("Tree Parameters"),
+                    h3("Tree Parameters"), #choose parameters for classification tree (not currently in server code)
                     selectInput(
                         inputId = "treeVars",
                         label = "Variables to Include:",
@@ -258,7 +260,7 @@ shinyUI(navbarPage(
                                      "INCIDENTS_COUNT"),
                         multiple = TRUE
                     ),
-                    h3("Random Forest Parameters"),
+                    h3("Random Forest Parameters"), #choose parameters for random forest (not currently in server code)
                     selectInput(
                         inputId = "rfVars",
                         label = "Variables to Include:",
@@ -280,13 +282,13 @@ shinyUI(navbarPage(
                                      "INCIDENTS_COUNT"),
                         multiple = TRUE
                     )
-                ),
-                    mainPanel(
-                        dataTableOutput("logistic"),
+                ), 
+                    mainPanel( #Output the test statistics from the logistic regression and have a start button to fit the models.
                         actionButton(
                             inputId = "start",
                             label = "Fit Models!"
-                        )
+                        ),
+                        DT::dataTableOutput("logistic")
                     )
             ),
             tabPanel(

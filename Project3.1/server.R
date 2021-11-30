@@ -4,6 +4,10 @@ library(stringr)
 library(DT)
 library(caret)
 
+setwd("C:\\Users\\awarhus_piusxi\\Desktop\\ST558\\Shiny Apps\\Project3")
+
+disciplines <- read_csv(".\\disciplines_final_2.csv")
+
 shinyServer(function(input, output, session) {
     output$barchart <- renderPlot({
         vars <- input$var
@@ -151,9 +155,10 @@ shinyServer(function(input, output, session) {
             )
         )
     })
+    
+    #Logistic Regression for Model Fitting Tab
 
-    observeEvent(input$start,{
-        output$logistic<-renderDataTable({
+    logReg<-eventReactive(input$start,{
         set.seed(8758)
         props <- as.numeric(input$proportions)
         cv<-as.numeric(input$cv)
@@ -168,9 +173,15 @@ shinyServer(function(input, output, session) {
                       family="binomial",
                       preProcess=c("center","scale"),
                       trControl=trainControl(method="cv",number=cv))
-        data.frame(train0$results)
+        return(train0)
+       
+        })
+    output$logistic<-renderDataTable({
+        data.frame(logReg)
     })
-    })
+   
+  
+   
 
 })
    
