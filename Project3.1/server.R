@@ -144,6 +144,13 @@ shinyServer(function(input, output, session) {
             write.csv(disciplines4,file = "disciplines.csv")
         }
     )
+    output$avgFormula <- renderUI({
+        withMathJax(
+            helpText(
+                "$$\\frac{1}{B}\\sum{f_b (x')} $$"
+            )
+        )
+    })
     output$classTree<-renderUI({
         set.seed(234)
         cv<-input$cv
