@@ -5,7 +5,6 @@ library(tidyverse)
 setwd("C:\\Users\\awarhus_piusxi\\Desktop\\ST558\\Shiny Apps\\Project3")
 
 disciplines <- read_csv(".\\disciplines_final_2.csv")
-imageName <- paste0("DPIimage.PNG")
 
 shinyUI(navbarPage(
     
@@ -18,10 +17,12 @@ shinyUI(navbarPage(
             mainPanel(
                 h3("App Description"),
                 img(
-                    src = imageName, 
-                    height = '306px', 
-                    width = '540px'
+                    src = "DPIimage.PNG", 
+                    height = '100px', 
+                    width = '300px'
                 ),
+                br(),
+                br(),
                 "This app explores behavior incident data from",
                 "schools in Wisconsin during the 2019-2020 school year.", 
                 "It can be broken down by type of school, location and type of incident.",
