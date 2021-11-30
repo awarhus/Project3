@@ -151,62 +151,30 @@ shinyServer(function(input, output, session) {
             )
         )
     })
-    output$classTree<-renderUI({
-        set.seed(234)
-        cv<-input$cv
-        cp<-input$cp
-        vars<-unlist(input$treeVars)
-        props <- input$proportions
-        split <- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
-                                     p = props, list = FALSE)
-        train <- disciplines[-split, ]
-        test <- disciplines[split, ]
-        ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
-        treeFit <- train(BEHAVIOUR_TYPE ~ .,
-                         data = train[,c("BEHAVIOR_TYPE",vars)], 
-                     method = "rpart", trControl = ctrl, 
-                     preProcess = c("center","scale"),
-                     cp = cp)
-    confusionMatrix(data=test$BEHAVIOUR_TYPE,reference=predict(treeFit,newdata=test))
-    })
-    output$randomForest<-renderUI({
-        set.seed(1231)
-        vars<-unlist(input$rfVars)
-        mtry<-input$mtry
-        props <- input$proportions
-        split <- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
-                                     p = props, list = FALSE)
-        train <- disciplines[-split, ]
-        test <- disciplines[split, ]
-        cv<-input$cv
-        ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
-        rfFit <- train(BEHAVIOR_TYPE ~ ., data = train[,c("BEHAVIOR_TYPE",vars)], 
-                       method = "rf", trControl = ctrl, 
-                       preProcess = c("center","scale"),
-                       tuneGrid = expand.grid(mtry=mtry))
-                       confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
-        confusionMatrix(data=test$BEHAVIOR_TYPE,reference=predict(rfFit,newdata=test))
-    })
-    output$logistic<-renderUI({
+
+    observeEvent(input$start,{
+        output$logistic<-renderDataTable({
         set.seed(8758)
-        props <- input$proportions
-        cv<-input$cv
+        props <- as.numeric(input$proportions)
+        cv<-as.numeric(input$cv)
         vars<-unlist(input$regVars)
-        split<- createDataPartition(y = disciplines$BEHAVIOR_TYPE, 
+        split<- createDataPartition(y = disciplines$CHARTER_IND, 
                                           p = props, list = FALSE)
         train <- disciplines[-split, ]
         test <- disciplines[split, ]
-        train0<-train(BEHAVIOR_TYPE~.,
-                      data=train[,c("BEHAVIOR_TYPE",vars)],
+        train0<-train(CHARTER_IND~.,
+                      data=train[,c("CHARTER_IND",vars)],
                       method="glm",
                       family="binomial",
                       preProcess=c("center","scale"),
                       trControl=trainControl(method="cv",number=cv))
+        data.frame(train0$results)
     })
-    
-    
-   
+    })
+
 })
+   
+
 
 
 

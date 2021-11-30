@@ -147,7 +147,7 @@ shinyUI(navbarPage(
         navbarMenu(
             title="Modeling",
             tabPanel(
-                title = "Modeling Info", #Need to add mathJax
+                title = "Modeling Info", 
                 mainPanel(fluidPage(
                     h4("Logistic Regression"),
                     "Logistic regression uses predictor variables to model the log odds of",
@@ -217,6 +217,7 @@ shinyUI(navbarPage(
                         inputId = "regVars",
                         label = "Variables to Include:",
                         choices = c("AGENCY_TYPE",
+                                    "BEHAVIOR_TYPE",
                                     "CESA",
                                     "COUNTY",
                                     "GRADE_GROUP",
@@ -225,6 +226,7 @@ shinyUI(navbarPage(
                                     "SCHOOL_NAME",
                                     "INCIDENTS_COUNT"),
                         selected = c("AGENCY_TYPE",
+                                     "BEHAVIOR_TYPE",
                                      "CESA",
                                      "COUNTY",
                                      "GRADE_GROUP",
@@ -277,14 +279,15 @@ shinyUI(navbarPage(
                                      "SCHOOL_NAME",
                                      "INCIDENTS_COUNT"),
                         multiple = TRUE
-                    ),
+                    )
+                ),
                     mainPanel(
+                        dataTableOutput("logistic"),
                         actionButton(
-                            inputId = "trainStart",
+                            inputId = "start",
                             label = "Fit Models!"
                         )
                     )
-                        
             ),
             tabPanel(
                 title = "Prediction",
@@ -321,7 +324,6 @@ shinyUI(navbarPage(
                     h3("Predicted Winner of a County with Your Inputs"),
                     dataTableOutput("preds")
                 )
-            )
         ) # closes the navbarMenu for the modeling section
             
        
