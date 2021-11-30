@@ -288,7 +288,12 @@ shinyUI(navbarPage(
                             inputId = "start",
                             label = "Fit Models!"
                         ),
-                        DT::dataTableOutput("logistic")
+                        h3("Logistic Regression Training Results"),
+                        DT::dataTableOutput("logistic"),
+                        h3("Classification Tree Training Results"),
+                        DT::dataTableOutput("classTree"),
+                        h3("Random Forest Training Results"),
+                        DT::dataTableOutput("randForest")
                     )
             ),
             tabPanel(
