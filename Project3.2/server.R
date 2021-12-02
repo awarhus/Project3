@@ -156,13 +156,13 @@ shinyServer(function(input, output, session) {
   })
   
   #Download the filtered data
-  output$downloadData <- downloadHandler( ##Fix this!
+  output$downloadData <- downloadHandler(
     filename = function() {
       paste("data-", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
       write.csv(disciplines %>% 
-                  filter(AGENCY_TYPE %in% str_detect(disciplines$AGENCY_TYPE, input$typeOfSchool)), file)
+                  filter(dataTab()), file)
     }
   )
   
@@ -363,6 +363,43 @@ shinyServer(function(input, output, session) {
                       reference=predict(train0,newdata=test))
       predict(train0,test)
     }
+  })
+  #Get variables for the model predictions
+  output$treePredInputs <- renderUI({
+    treeVars <- input$treeVars
+    tags$ul(tagList(
+      lapply(treeVars, function(variable) {
+        selectInput(
+          inputId = paste0(variable, "Value"),
+          label = paste0("Input ", variable, " Value"),
+          choices = pull(disciplines[, variable])
+        )
+      })
+    ))
+  })
+  output$logRegPredInputs <- renderUI({
+    treeVars <- input$regVars
+    tags$ul(tagList(
+      lapply(treeVars, function(variable) {
+        selectInput(
+          inputId = paste0(variable, "Value"),
+          label = paste0("Input ", variable, " Value"),
+          choices = pull(disciplines[, variable])
+        )
+      })
+    ))
+  })
+  output$randForPredInputs <- renderUI({
+    treeVars <- input$rfVars
+    tags$ul(tagList(
+      lapply(treeVars, function(variable) {
+        selectInput(
+          inputId = paste0(variable, "Value"),
+          label = paste0("Input ", variable, " Value"),
+          choices = pull(disciplines[, variable])
+        )
+      })
+    ))
   })
   output$pred<-renderDataTable({
     data.frame(preds()$results)

@@ -326,11 +326,25 @@ shinyUI(navbarPage(
         ),
           mainPanel(
             h3("Predicted type of School"),
-              DT::dataTableOutput("pred")
+              DT::dataTableOutput("pred"),
+            conditionalPanel(
+              condition = "input.modelType == 'logReg'",
+              uiOutput("logRegPredInputs")
+            ),
+            conditionalPanel(
+              condition = "input.modelType == 'tree'",
+              uiOutput("treePredInputs")
+            ),
+            conditionalPanel(
+              condition = "input.modelType == 'randFor'",
+              uiOutput("randForPredInputs")
             )
-        ) 
-      ) 
-    ))
-)
+            )
+      )
+    )
+  )
+))
+
+
 
 
