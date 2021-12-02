@@ -10,7 +10,7 @@ shinyUI(navbarPage(
   
   title = "Notable Discipline Incidents in Wisconsin Schools 2019-2020",
   tabsetPanel(
-    
+    #About tab
     tabPanel(
       title="About",
       mainPanel(
@@ -46,6 +46,7 @@ shinyUI(navbarPage(
         
       )
     ),
+    #Data Exploration tab
     tabPanel(
       title = "Data Exploration",
       sidebarPanel(
@@ -111,7 +112,8 @@ shinyUI(navbarPage(
         conditionalPanel(
           condition = "input.summ == 'Just the Mean'",
           DT::dataTableOutput("mean")
-        ))), #closes the data exploration tab
+        ))), 
+    
     #Data tab
     tabPanel(
       title="Data",
@@ -145,7 +147,8 @@ shinyUI(navbarPage(
         downloadButton("downloadData", "Download")
       )
     ),
-    #closes the data tab
+    
+    #Modeling tab
     navbarMenu(
       title="Modeling",
       tabPanel(
@@ -184,7 +187,7 @@ shinyUI(navbarPage(
           br(),
           br()
         ))
-      ), #closes modeling info tab
+      ), 
       
       #Model Fitting Tab
       tabPanel(
@@ -319,16 +322,15 @@ shinyUI(navbarPage(
             ),
             choiceValues = c("logReg", "tree", "randFor"),
             selected = "logReg"
-          ),
+          )
+        ),
           mainPanel(
             h3("Predicted type of School"),
-            dataTableOutput("pred")
-          )
-        ) # closes the navbarMenu for the modeling section
-        
-        
-      ) #tabsetpanel 
+              DT::dataTableOutput("pred")
+            )
+        ) 
+      ) 
     ))
 )
-)
+
 

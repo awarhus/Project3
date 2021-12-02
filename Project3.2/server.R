@@ -1,13 +1,16 @@
+#Install needed packages
 library(shiny)
 library(dplyr)
 library(stringr)
 library(DT)
 library(caret)
 
-
+#Read in the data
 disciplines <- read_csv(".\\disciplines_final_2.csv")
 
 shinyServer(function(input, output, session) {
+  
+  #Data Exploration tab-Render the barchart based on user input
   output$barchart <- renderPlot({
     vars <- input$var
     if(vars == "Agency Type"){
@@ -36,6 +39,8 @@ shinyServer(function(input, output, session) {
       g
     }
   })
+  
+  #Data Exploration tab-render the boxplot based on user input
   output$boxplot <- renderPlot({
     vars <- input$var
     type<-input$typeOfSchool
@@ -63,6 +68,8 @@ shinyServer(function(input, output, session) {
         geom_boxplot()
     }
   })
+  
+  #Data Exploration tab-render the data table based on user input
   output$fivenumber <- renderDataTable({
     vars <- input$var
     if(vars == "Agency Type"){
@@ -96,6 +103,8 @@ shinyServer(function(input, output, session) {
       fiver
     }
   })
+  
+  #Data Exploration tab-render the data table based on user input
   output$mean <- renderDataTable({
     vars <- input$var
     if(vars == "Agency Type"){
@@ -130,6 +139,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  #Data tab-filter and display data based on user input 
   output$dataTab <- renderDataTable({
     school<-input$typeOfSchool
     grade<-input$gradeGroup
@@ -144,6 +154,8 @@ shinyServer(function(input, output, session) {
     disciplines4<-select(disciplines3,columns)
     disciplines4
   })
+  
+  #Download the filtered data
   output$downloadData <- downloadHandler( ##Fix this!
     filename = function() {
       paste("data-", Sys.Date(), ".csv", sep="")
@@ -153,6 +165,8 @@ shinyServer(function(input, output, session) {
                   filter(AGENCY_TYPE %in% str_detect(disciplines$AGENCY_TYPE, input$typeOfSchool)), file)
     }
   )
+  
+  #Modeling tab-add formula in mathJax
   output$avgFormula <- renderUI({
     withMathJax(
       helpText(
@@ -162,7 +176,6 @@ shinyServer(function(input, output, session) {
   })
   
   #Logistic Regression for Model Fitting Tab
-  
   logReg<-eventReactive(input$start,{
     set.seed(8758)
     props <- as.numeric(input$proportions)
@@ -205,6 +218,7 @@ shinyServer(function(input, output, session) {
   output$logTest<-renderDataTable({
     data.frame(logRegTest()$results)
   })
+  
   #Classification Tree for Model Fitting Tab
   tree<-eventReactive(input$start,{
     set.seed(234)
@@ -249,6 +263,7 @@ shinyServer(function(input, output, session) {
   output$classTest<-renderDataTable({
     data.frame(treeTest()$results)
   })
+  
   #Random Forest for Model Fitting Tab
   rf<-eventReactive(input$start,{
     set.seed(1231)
@@ -291,7 +306,9 @@ shinyServer(function(input, output, session) {
   output$rfTest2<-renderDataTable({
     data.frame(rfTest()$results)
   })
-  rfPred<-eventReactive(input$start,{
+  
+  #Obtaining predictions for Prediction tab
+  preds<-eventReactive(input$start,{
     if (input$modelType == "randFor"){
       set.seed(1231)
       vars<-unlist(input$rfVars)
@@ -307,33 +324,47 @@ shinyServer(function(input, output, session) {
                      method = "rf", trControl = ctrl, 
                      preProcess = c("center","scale"),
                      tuneGrid = expand.grid(mtry=mtry))
-      preds <- predict(rfFit, disciplines[ind == 2,])
+      preds <- predict(rfFit, test)
+    }
+      else if (input$modelType == 'tree'){
+        set.seed(234)
+        cv<-input$cv
+        cp<-input$cp
+        vars<-unlist(input$treeVars)
+        props <- input$proportions
+        split <- createDataPartition(y = disciplines$CHARTER_IND, 
+                                     p = props, list = FALSE)
+        train <- disciplines[-split, ]
+        test <- disciplines[split, ]
+        ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
+        treeFit <- train(BEHAVIOUR_TYPE ~ .,
+                         data = train[,c("CHARTER_IND",vars)], 
+                         method = "rpart", trControl = ctrl, 
+                         preProcess = c("center","scale"),
+                         cp = cp)
+        predict(treeFit,test,type="class")
+      }
+    else if (input$modelType == 'logReg'){
+      set.seed(8758)
+      props <- as.numeric(input$proportions)
+      cv<-as.numeric(input$cv)
+      vars<-unlist(input$regVars)
+      split<- createDataPartition(y = disciplines$CHARTER_IND, 
+                                  p = props, list = FALSE)
+      train <- disciplines[-split, ]
+      test <- disciplines[split, ]
+      train0<-train(CHARTER_IND~.,
+                    data=train[,c("CHARTER_IND",vars)],
+                    method="glm",
+                    family="binomial",
+                    preProcess=c("center","scale"),
+                    trControl=trainControl(method="cv",number=cv))
+      confusionMatrix(data=test$CHARTER_IND,
+                      reference=predict(train0,newdata=test))
+      predict(train0,test)
     }
   })
   output$pred<-renderDataTable({
-    data.frame(rfPred()$results)
-  })
-  output$rfTest2<-renderDataTable({
-    data.frame(rfPred()$results)
-  })
-  treePred<-eventReactive(input$start,{
-    if (input$modelType == "tree"){
-      set.seed(1231)
-      vars<-unlist(input$rfVars)
-      mtry<-input$mtry
-      props <- input$proportions
-      split <- createDataPartition(y = disciplines$CHARTER_IND, 
-                                   p = props, list = FALSE)
-      train <- disciplines[-split, ]
-      test <- disciplines[split, ]
-      cv<-input$cv
-      ctrl <- trainControl(method="repeatedcv",number=cv, repeats = 3)
-      rfFit <- train(CHARTER_IND ~ ., data = train[,c("CHARTER_IND",vars)], 
-                     method = "rf", trControl = ctrl, 
-                     preProcess = c("center","scale"),
-                     tuneGrid = expand.grid(mtry=mtry))
-      preds <- predict(rfFit, disciplines[ind == 2,])
-    }
-    
+    data.frame(preds()$results)
   })
 })
