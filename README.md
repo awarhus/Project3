@@ -14,13 +14,20 @@ library(caret)
 
 # Install the packages with this code chunk
 ```
-install.packages("shiny")
-install.packages("readr")
-install.packages("tidyverse")
-install.packages("dplyr")
-install.packages("stringr")
-install.packages("DT")
-install.packages("caret")
+install.packages("shiny")  
+
+install.packages("readr")  
+
+install.packages("tidyverse")  
+
+install.packages("dplyr")  
+
+install.packages("stringr")  
+
+install.packages("DT")  
+
+install.packages("caret")  
+
 ```
 
 ## Run the app
